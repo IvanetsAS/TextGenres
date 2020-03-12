@@ -14,6 +14,19 @@ from MyStemer.MyStemmer import lemmata_statistic
 
 splitter = " <_!_> "
 
+
+def get_text_features(text):
+    return [
+        text.middle_word_length_by_chars,
+        text.middle_word_length_by_vowels,
+        text.middle_sentence_length_by_words,
+        text.lemmata_statistic.get_nouns_percent(),
+        text.lemmata_statistic.get_adj_percent(),
+        text.lemmata_statistic.get_verb_percent(),
+        text.lemmata_statistic.get_spro_percent()
+    ]
+
+
 class Corpus:
     def __init__(self):
         self.corpus = []
@@ -69,59 +82,40 @@ class Corpus:
     def get_training_set_perceptron(self):
         training_corpus = self.corpus[: round(len(self.corpus) * 0.75)]
 
-        return [
-                   [
-                       text.middle_word_length_by_chars,
-                       text.middle_word_length_by_vowels,
-                       text.middle_sentence_length_by_words,
-                       text.lemmata_statistic.get_nouns_percent(),
-                       text.lemmata_statistic.get_adj_percent(),
-                       text.lemmata_statistic.get_verb_percent(),
-                       text.lemmata_statistic.get_spro_percent()
-                   ] for text in training_corpus], [text.get_genre3_as_int() for text in training_corpus]
+        return [get_text_features(text) for text in training_corpus], [text.get_genre3_as_int() for text in
+                                                                       training_corpus]
 
-    def get_training_set_bayes(self):
+    def get_training_set_bayes(self, classes_count):
         training_corpus = self.corpus[: round(len(self.corpus) * 0.75)]
 
-        return np.array([
-                   np.array([
-                       text.middle_word_length_by_chars,
-                       text.middle_word_length_by_vowels,
-                       text.middle_sentence_length_by_words,
-                       text.lemmata_statistic.get_nouns_percent(),
-                       text.lemmata_statistic.get_adj_percent(),
-                       text.lemmata_statistic.get_verb_percent(),
-                       text.lemmata_statistic.get_spro_percent()
-                   ]) for text in training_corpus]), np.array([text.get_genre6_as_label() for text in training_corpus])
+        if classes_count == 2:
+            training_labels = np.array([text.get_genre2_as_label() for text in training_corpus])
+        else:
+            if classes_count == 3:
+                training_labels = np.array([text.get_genre3_as_label() for text in training_corpus])
+            else:
+                training_labels = np.array([text.get_genre6_as_label() for text in training_corpus])
+
+        return np.array([np.array(get_text_features(text)) for text in training_corpus]), training_labels
 
     def get_testing_set_perceptron(self):
         testing_corpus = self.corpus[round(len(self.corpus) * 0.75):]
 
-        return [
-                   [
-                       text.middle_word_length_by_chars,
-                       text.middle_word_length_by_vowels,
-                       text.middle_sentence_length_by_words,
-                       text.lemmata_statistic.get_nouns_percent(),
-                       text.lemmata_statistic.get_adj_percent(),
-                       text.lemmata_statistic.get_verb_percent(),
-                       text.lemmata_statistic.get_spro_percent()
-                   ] for text in testing_corpus], [text.get_genre6_as_int() for text in testing_corpus]
+        return [get_text_features(text) for text in testing_corpus], [text.get_genre6_as_int() for text in
+                                                                      testing_corpus]
 
-    def get_testing_set_bayes(self):
+    def get_testing_set_bayes(self, classes_count):
         testing_corpus = self.corpus[round(len(self.corpus) * 0.75):]
 
-        return np.array([
-                   np.array([
-                       text.middle_word_length_by_chars,
-                       text.middle_word_length_by_vowels,
-                       text.middle_sentence_length_by_words,
-                       text.lemmata_statistic.get_nouns_percent(),
-                       text.lemmata_statistic.get_adj_percent(),
-                       text.lemmata_statistic.get_verb_percent(),
-                       text.lemmata_statistic.get_spro_percent()
-                   ]) for text in testing_corpus]), np.array([text.get_genre6_as_label() for text in testing_corpus])
+        if classes_count == 2:
+            training_labels = np.array([text.get_genre2_as_label() for text in testing_corpus])
+        else:
+            if classes_count == 3:
+                training_labels = np.array([text.get_genre3_as_label() for text in testing_corpus])
+            else:
+                training_labels = np.array([text.get_genre6_as_label() for text in testing_corpus])
 
+        return np.array([np.array(get_text_features(text)) for text in testing_corpus]), training_labels
 
     def loadCorpus(self, corpus_path):
         file_list = os.listdir(corpus_path)

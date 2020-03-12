@@ -161,8 +161,8 @@ test_textes, test_genres = corpus.get_testing_set_perceptron()
 from sklearn.svm import SVC
 svc_model = SVC(gamma='auto')
 
-train_textes, train_genres = corpus.get_training_set_bayes()
-test_textes, test_genres = corpus.get_testing_set_bayes()
+train_textes, train_genres = corpus.get_training_set_bayes(2)
+test_textes, test_genres = corpus.get_testing_set_bayes(2)
 
 svc_model.fit(train_textes, train_genres)
 
@@ -219,3 +219,12 @@ soer = np.array([np.array([
 
 soer_result = svc_model.predict(soer)
 print("soer_result " + genres6[soer_result[0]])
+
+
+cor_data = []
+for text_data in corpus.corpus:
+    decision_func_arr = svc_model.decision_function([np.array(CorpusProcessor.get_text_features(text_data))])
+    #genres2[svc_model.predict([np.array(CorpusProcessor.get_text_features(text_data))])[0]]
+    cor_data.append([decision_func_arr[0], text_data.fre, text_data.fkra, text_data.ari ])
+
+np.corrcoef(cor_data)
