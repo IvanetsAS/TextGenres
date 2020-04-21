@@ -44,7 +44,8 @@ class Corpus:
             metric = current_processing.getMetrics()
 
             text_data = TextData()
-            text_data.lemmata_statistic = MyStemmer.get_lemmata_statistic(path + "/" + text)
+            text_my_stemmer = MyStemmer.MyStemmer(path + "/" + text)
+            text_data.lemmata_statistic = text_my_stemmer.lemmata_statistic
 
             text_data.name = text
             text_data.genre = genre_dir

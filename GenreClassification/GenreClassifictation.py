@@ -226,5 +226,6 @@ for text_data in corpus.corpus:
     decision_func_arr = svc_model.decision_function([np.array(CorpusProcessor.get_text_features(text_data))])
     #genres2[svc_model.predict([np.array(CorpusProcessor.get_text_features(text_data))])[0]]
     cor_data.append([decision_func_arr[0], text_data.fre, text_data.fkra, text_data.ari ])
-
-np.corrcoef(cor_data)
+cor_data_normal = np.array(cor_data).T
+print(cor_data_normal.shape)
+np.corrcoef(cor_data_normal)
