@@ -18,11 +18,11 @@ def loadMyFile(myFile, daniels_file):
         for my_corpus_line in my_corpus:
             if metrics[0] in my_corpus_line and metrics[0] is not "":
                 updated_corpus.append( my_corpus_line + "<_!_> " + metrics[9] + "<_!_> " + metrics[10] + "<_!_>")
-    my_new_file = open("/home/ivanetc/PycharmProjects/Readability/GenreCorpus/corpus_new_file.txt", "w")
+    my_new_file = open("/corpus_new_file.txt", "w")
     for line in updated_corpus:
         my_new_file.write(line + "\n")
     my_new_file.close()
     print("FINISHED")
 
 
-loadMyFile("/home/ivanetc/PycharmProjects/Readability/GenreCorpus/corpus_file.txt", "/home/ivanetc/PycharmProjects/Readability/GenreCorpus/data_copy.csv")
+loadMyFile("/home/ivanetc/PycharmProjects/Readability/GenreCorpus/corpus_file.txt", "/data_copy.csv")

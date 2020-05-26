@@ -18,6 +18,13 @@ class TextData:
         self.author = ""
         self.name = ""
 
+        self.vector = []
+        self.lemmata_text = []
+        self.text_string = ""
+        self.path = ""
+        self.prediction_result = []
+        self.max_surence = 0
+
     def add_readability_metrics(self, metric):
         self.words_count = int(metric.wordCount)
         self.sentence_count = int(metric.sentencesCount)
